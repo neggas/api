@@ -26,3 +26,8 @@ export interface User extends mongoose.Document{
     password:string
     confirm_password:string
 }
+
+export interface UserPayload {
+    email:string;
+    username:string;
+}

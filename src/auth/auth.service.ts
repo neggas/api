@@ -4,11 +4,14 @@ import { UserInfosDto } from './dto/register.dto';
 import { User } from './user-model';
 import {Model} from "mongoose";
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+
 
 @Injectable()
 export class AuthService {
     constructor(
-        @InjectModel("User") private readonly UserModel : Model<User> 
+        @InjectModel("User") private readonly UserModel : Model<User>,
+        private readonly jwtService:JwtService
     ){}
 
 
@@ -44,7 +47,14 @@ export class AuthService {
         if (!isMatch) {
             throw new NotFoundException("Mot de passe incorrect !"); 
         } else {
-            return {user, message: "Connexion reussi !"};
+
+            const payload ={email:user.email,username:user.username};
+            const jwt = await this.jwtService.sign(payload);
+
+            return {
+                "access_token":jwt
+            }
+           
         }
     }
 }
