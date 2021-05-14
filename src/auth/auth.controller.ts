@@ -13,5 +13,9 @@ export class AuthController {
        const response = this.authService.RegisterUser(user_infos);
        return response;
     }
+    @Post('login')
+    async Login(@Body() user_login) {
+        return await this.authService.LoginUser(user_login)
+    }
 }
 

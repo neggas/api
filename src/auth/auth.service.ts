@@ -32,4 +32,19 @@ export class AuthService {
         if(!user) throw new NotFoundException("Mauvaise informations")
         return user;
     }
+
+
+    async LoginUser(user_login) {
+        const {email, password} = user_login;
+        const user = await this.UserModel.findOne({email: email})
+        
+        if (!user) throw new NotFoundException("Cet utilisateur n'existe pas !");
+        const isMatch = await bcrypt.compare(password, user.password)
+
+        if (!isMatch) {
+            throw new NotFoundException("Mot de passe incorrect !"); 
+        } else {
+            return {user, message: "Connexion reussi !"};
+        }
+    }
 }
